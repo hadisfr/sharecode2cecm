@@ -1,0 +1,15 @@
+{
+    "urls": {
+        "root": "http://sharecode.io/",
+        "login": "users/login",
+        "export": "runs/export/",
+        "logout": "users/logout"
+    },
+    "loggin_req_key":{
+        "usrname": "username",
+        "passwd": "password"
+    },
+    "questions": [
+        "utap/1003"
+    ]
+}
