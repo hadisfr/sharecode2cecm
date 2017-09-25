@@ -1,0 +1,14 @@
+{
+    "folders":
+    [
+        {
+            "path": ".",
+            "name": "sharecode2cecm"
+        }
+    ],
+    "settings": {
+        "python_interpreter": "$project_path/.env/bin/python",
+        "tab_size": 4,
+        "detect_indentation": true,
+    }
+}
