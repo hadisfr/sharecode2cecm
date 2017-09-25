@@ -5,7 +5,7 @@
         "export": "runs/export/",
         "logout": "users/logout"
     },
-    "loggin_req_key":{
+    "loggin_req_keys":{
         "usrname": "username",
         "passwd": "password"
     },

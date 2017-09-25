@@ -28,7 +28,7 @@ def main():
     db = {}
 
     cookiejar = requests.get(config.urls.root).cookies
-    requests.post(config.urls.login, data={config.loggin_req_key.usrname: usrname, config.loggin_req_key.passwd: passwd}, cookies=cookiejar)
+    requests.post(config.urls.login, data={config.loggin_req_keys.usrname: usrname, config.loggin_req_keys.passwd: passwd}, cookies=cookiejar)
     for question in config.questions:
         res = requests.get(config.urls.export + question, cookies=cookiejar)
         print("loading %r results..." % question, file=stderr)
