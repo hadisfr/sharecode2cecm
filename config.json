@@ -9,6 +9,23 @@
         "usrname": "username",
         "passwd": "password"
     },
+    "report_json_keys":{
+        "datetime": "time",
+        "usrname": "username",
+        "code": "source",
+        "result": "result",
+        "lang": "lang"
+    },
+    "file_extension": {
+        "C": "c",
+        "C++": "cpp",
+        "Java": "java",
+        "Python": "py"
+    },
+    "report_json_accepted_flag": "Accepted",
+    "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "codes_folder_addr": "codes",
+    "deadline": "",
     "questions": [
         "utap/1003"
     ]
