@@ -13,10 +13,11 @@ import requests
 from dict_wrapper import DictWrapper
 
 config_file_addr = "config.json"
+config = None
 
 
-def main():
-    with open(config_file_addr) as f:
+def extract_config(addr):
+    with open(addr) as f:
         config = DictWrapper(json.load(f))
     for url in config.urls:
         if url != "root":
@@ -31,18 +32,28 @@ def main():
     if not os.path.exists(config.codes_folder_addr):
         os.mkdir(config.codes_folder_addr)
 
+    return config
+
+
+def get_authentication_data():
     print("username:\t", end="", file=stderr)
     usrname = input()
     print("password:\t", end="", file=stderr)
     passwd = getpass()
     print("\r          ", file=stderr)
+    return {"usrname": usrname, "passwd": passwd}
 
+
+def get_submissions_raw_date(authentication_data):
     raw_db = {}
 
     cookiejar = requests.get(config.urls.root).cookies
     requests.post(
         config.urls.login,
-        data={config.loggin_req_keys.usrname: usrname, config.loggin_req_keys.passwd: passwd},
+        data={
+            config.loggin_req_keys.usrname: authentication_data["usrname"],
+            config.loggin_req_keys.passwd: authentication_data["passwd"]
+        },
         cookies=cookiejar)
     for question in config.questions:
         res = requests.get(config.urls.export + question, cookies=cookiejar)
@@ -56,7 +67,11 @@ def main():
                 submission[config.report_json_keys.datetime],
                 config.datetime_format)
 
-    db = defaultdict(list)
+    return raw_db
+
+
+def extract_acceptable_submissions(raw_db):
+    db = defaultdict(set)
 
     for (question, submissions) in raw_db.items():
         codes_folder_addr = config.codes_folder_addr + "/" + question + "/"
@@ -73,7 +88,18 @@ def main():
                         + config.file_extension.dictionary[submission[config.report_json_keys.lang]],
                         "w") as f:
                     print(submission[config.report_json_keys.code], file=f)
-                db[question].append(submission[config.report_json_keys.usrname])
+                db[question].add(submission[config.report_json_keys.usrname])
+
+    return db
+
+
+def main():
+    global config
+    config = extract_config(config_file_addr)
+    authentication_data = get_authentication_data()
+
+    raw_db = get_submissions_raw_date(authentication_data)
+    db = extract_acceptable_submissions(raw_db)
 
     print(db)
 
