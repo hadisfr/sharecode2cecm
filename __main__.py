@@ -93,6 +93,26 @@ def extract_acceptable_submissions(raw_db):
     return db
 
 
+def make_output(db):
+    with open(config.list_file_addr) as fin:
+        with open(config.output_file_addr, "w") as fout:
+            reader = csv.DictReader(fin)
+            writer = csv.DictWriter(
+                fout,
+                reader.fieldnames + config.questions + [config.output_overall_score_key])
+            writer.writeheader()
+            for row in reader:
+                row[config.output_overall_score_key] = 0
+                for question in config.questions:
+                    row[question] = [0, 1][row[config.list_usrname_key] in db[question]]
+                    row[config.output_overall_score_key] += row[question]
+                row[config.output_overall_score_key] = (
+                    row[config.output_overall_score_key]
+                    / len(config.questions)
+                    * 100)
+                writer.writerow(row)
+
+
 def main():
     global config
     config = extract_config(config_file_addr)
@@ -100,8 +120,7 @@ def main():
 
     raw_db = get_submissions_raw_date(authentication_data)
     db = extract_acceptable_submissions(raw_db)
-
-    print(db)
+    make_output(db)
 
 
 if __name__ == '__main__':

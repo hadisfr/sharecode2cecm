@@ -24,9 +24,14 @@
     },
     "report_json_accepted_flag": "Accepted",
     "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "list_file_addr": "in.csv",
+    "list_usrname_key": "username",
+    "output_file_addr": "out.csv",
+    "output_overall_score_key": "A0",
     "codes_folder_addr": "codes",
     "deadline": "",
     "questions": [
+        "utap/1002",
         "utap/1003"
     ]
 }
