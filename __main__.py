@@ -83,12 +83,12 @@ def extract_acceptable_submissions(raw_db):
                     and submission[config.report_json_keys.datetime] <= config.deadline):
                 with open(
                         codes_folder_addr
-                        + submission[config.report_json_keys.usrname]
+                        + submission[config.report_json_keys.uid]
                         + "."
                         + config.file_extension.dictionary[submission[config.report_json_keys.lang]],
                         "w") as f:
                     print(submission[config.report_json_keys.code], file=f)
-                db[question].add(submission[config.report_json_keys.usrname])
+                db[question].add(submission[config.report_json_keys.uid])
 
     return db
 
@@ -104,7 +104,7 @@ def make_output(db):
             for row in reader:
                 row[config.output_overall_score_key] = 0
                 for question in config.questions:
-                    row[question] = [0, 1][row[config.list_usrname_key] in db[question]]
+                    row[question] = [0, 1][row[config.list_uid_key] in db[question]]
                     row[config.output_overall_score_key] += row[question]
                 row[config.output_overall_score_key] = (
                     row[config.output_overall_score_key]
