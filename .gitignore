@@ -3,5 +3,6 @@
 __pycache__
 .DS_Store
 *.sublime-workspace
-codes
+**/codes
 *.csv
+files

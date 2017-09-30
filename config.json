@@ -25,11 +25,11 @@
     },
     "report_json_accepted_flag": "Accepted",
     "datetime_format": "%Y-%m-%d %H:%M:%S",
-    "list_file_addr": "in.csv",
+    "list_file_addr": "files/list.csv",
     "list_uid_key": "Email address",
-    "output_file_addr": "out.csv",
+    "output_file_addr": "files/scores.csv",
     "output_overall_score_key": "A0",
-    "codes_folder_addr": "codes",
+    "codes_folder_addr": "files/codes",
     "deadline": "",
     "late_policies": {
         "00 00:00:00": 100,
@@ -40,7 +40,8 @@
         "04 02:00:00": 15
     },
     "questions": [
-        "utap/1002",
-        "utap/1003"
+        "utap/1004",
+        "utap/1005",
+        "utap/1006"
     ]
 }
