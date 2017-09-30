@@ -2,6 +2,7 @@
     "urls": {
         "root": "http://sharecode.io/",
         "login": "users/login",
+        "successfull_login_return": "",
         "export": "runs/export/",
         "logout": "users/logout"
     },

@@ -54,13 +54,15 @@ def get_submissions_raw_date(authentication_data):
     raw_db = {}
 
     cookiejar = requests.get(config.urls.root).cookies
-    requests.post(
-        config.urls.login,
-        data={
-            config.loggin_req_keys.usrname: authentication_data["usrname"],
-            config.loggin_req_keys.passwd: authentication_data["passwd"]
-        },
-        cookies=cookiejar)
+    if (
+            requests.post(
+            config.urls.login,
+            data={
+                config.loggin_req_keys.usrname: authentication_data["usrname"],
+                config.loggin_req_keys.passwd: authentication_data["passwd"]
+            },
+            cookies=cookiejar).url != config.urls.successfull_login_return):
+        raise RuntimeError("Authentication failed.")
     for question in config.questions:
         res = requests.get(config.urls.export + question, cookies=cookiejar)
         print("loading %r results..." % question, file=stderr)
