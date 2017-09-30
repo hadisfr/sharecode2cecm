@@ -5,8 +5,8 @@ import csv
 import os
 from sys import stderr
 from getpass import getpass
-from datetime import datetime
-from collections import defaultdict
+from datetime import datetime, timedelta
+from collections import defaultdict, OrderedDict
 
 import requests
 
@@ -26,6 +26,12 @@ def extract_config(addr):
         config.deadline = datetime.strptime(config.deadline, config.datetime_format)
     else:
         config.deadline = datetime.now()
+    late_policies = OrderedDict()
+    for (dt, score) in config.late_policies.items():
+        ((days,), (hours, minutes, seconds)) = (i.split(":") for i in dt.split(" "))
+        (days, hours, minutes, seconds) = (int(i) for i in (days, hours, minutes, seconds))
+        late_policies[timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)] = score
+    config.late_policies = late_policies
     if not config.codes_folder_addr:
         config.codes_folder_addr = "."
 
@@ -71,16 +77,15 @@ def get_submissions_raw_date(authentication_data):
 
 
 def extract_acceptable_submissions(raw_db):
-    db = defaultdict(set)
+    db = defaultdict(dict)
 
     for (question, submissions) in raw_db.items():
         codes_folder_addr = config.codes_folder_addr + "/" + question + "/"
         if not os.path.exists(codes_folder_addr):
             os.makedirs(codes_folder_addr)
         for submission in submissions:
-            if (
-                    submission[config.report_json_keys.result] == config.report_json_accepted_flag
-                    and submission[config.report_json_keys.datetime] <= config.deadline):
+            score = calculate_score(submission)
+            if score:
                 with open(
                         codes_folder_addr
                         + submission[config.report_json_keys.uid]
@@ -88,7 +93,7 @@ def extract_acceptable_submissions(raw_db):
                         + config.file_extension.dictionary[submission[config.report_json_keys.lang]],
                         "w") as f:
                     print(submission[config.report_json_keys.code], file=f)
-                db[question].add(submission[config.report_json_keys.uid])
+                db[question][submission[config.report_json_keys.uid]] = score
 
     return db
 
@@ -104,13 +109,25 @@ def make_output(db):
             for row in reader:
                 row[config.output_overall_score_key] = 0
                 for question in config.questions:
-                    row[question] = [0, 1][row[config.list_uid_key] in db[question]]
+                    row[question] = float(
+                        row[config.list_uid_key] in db[question]
+                        and db[question][row[config.list_uid_key]])
                     row[config.output_overall_score_key] += row[question]
                 row[config.output_overall_score_key] = (
                     row[config.output_overall_score_key]
-                    / len(config.questions)
-                    * 100)
+                    / len(config.questions))
                 writer.writerow(row)
+
+
+def calculate_score(submission):
+    if submission[config.report_json_keys.result] != config.report_json_accepted_flag:
+        return 0
+    late = submission[config.report_json_keys.datetime] - config.deadline
+    for policy in config.late_policies:
+        if late <= policy:
+            return config.late_policies[policy]
+            break
+    return 0
 
 
 def main():

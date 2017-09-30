@@ -30,6 +30,14 @@
     "output_overall_score_key": "A0",
     "codes_folder_addr": "codes",
     "deadline": "",
+    "late_policies": {
+        "00 00:00:00": 100,
+        "00 02:00:00": 95,
+        "01 02:00:00": 75,
+        "02 02:00:00": 55,
+        "03 02:00:00": 35,
+        "04 02:00:00": 15
+    },
     "questions": [
         "utap/1002",
         "utap/1003"
