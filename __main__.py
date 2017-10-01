@@ -87,7 +87,7 @@ def extract_acceptable_submissions(raw_db):
             os.makedirs(codes_folder_addr)
         for submission in submissions:
             score = calculate_score(submission)
-            if score:
+            if score and submission[config.report_json_keys.uid] not in db[question].keys():
                 with open(
                         codes_folder_addr
                         + submission[config.report_json_keys.uid]
