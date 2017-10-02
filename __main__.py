@@ -106,18 +106,19 @@ def make_output(db):
             reader = csv.DictReader(fin)
             writer = csv.DictWriter(
                 fout,
-                reader.fieldnames + config.questions + [config.output_overall_score_key])
+                reader.fieldnames + list(config.questions.keys()) + [config.output_overall_score_key])
             writer.writeheader()
             for row in reader:
-                row[config.output_overall_score_key] = 0
+                sum_of_scores = 0
+                sum_of_weights = 0
                 for question in config.questions:
                     row[question] = float(
                         row[config.list_uid_key] in db[question]
                         and db[question][row[config.list_uid_key]])
-                    row[config.output_overall_score_key] += row[question]
-                row[config.output_overall_score_key] = (
-                    row[config.output_overall_score_key]
-                    / len(config.questions))
+                    sum_of_scores += row[question] * config.questions.dictionary[question]
+                    sum_of_weights += config.questions.dictionary[question]
+                row[config.output_overall_score_key] = sum_of_scores / sum_of_weights
+                row[config.output_overall_score_key] = "%.2f" % row[config.output_overall_score_key]
                 writer.writerow(row)
 
 
