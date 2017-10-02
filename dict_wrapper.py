@@ -33,3 +33,6 @@ class DictWrapper():
 
     def __iter__(self):
         return dict.__iter__(self.dictionary)
+
+    def __len__(self):
+        return len(self.dictionary)
