@@ -30,7 +30,7 @@
     "output_file_addr": "files/scores.csv",
     "output_overall_score_key": "A0",
     "codes_folder_addr": "files/codes",
-    "deadline": "",
+    "deadline": "2017-10-01 23:55:00",
     "late_policies": {
         "00 00:00:00": 100,
         "00 02:00:00": 95,
