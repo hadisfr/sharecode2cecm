@@ -71,6 +71,10 @@ def get_submissions_raw_date(authentication_data):
 
     for (question, submissions) in raw_db.items():
         for submission in submissions:
+            if (
+                    not config.is_uid_case_sensitive
+                    and isinstance(submission[config.report_json_keys.uid], str)):
+                submission[config.report_json_keys.uid] = (submission[config.report_json_keys.uid]).lower()
             submission[config.report_json_keys.datetime] = datetime.strptime(
                 submission[config.report_json_keys.datetime],
                 config.datetime_format)
@@ -111,10 +115,11 @@ def make_output(db):
             for row in reader:
                 sum_of_scores = 0
                 sum_of_weights = 0
+                uid = row[config.list_uid_key]
+                if not config.is_uid_case_sensitive and isinstance(uid, str):
+                    uid = uid.lower()
                 for question in config.questions:
-                    row[question] = float(
-                        row[config.list_uid_key] in db[question]
-                        and db[question][row[config.list_uid_key]])
+                    row[question] = float(uid in db[question] and db[question][uid])
                     sum_of_scores += row[question] * config.questions.dictionary[question]
                     sum_of_weights += config.questions.dictionary[question]
                 row[config.output_overall_score_key] = sum_of_scores / sum_of_weights
