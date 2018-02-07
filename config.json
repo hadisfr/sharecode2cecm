@@ -31,7 +31,7 @@
     "output_overall_score_key": "A0",
     "codes_folder_addr": "files/codes",
     "is_uid_case_sensitive": false,
-    "deadline": "2017-10-01 23:55:00",
+    "deadline": "2018-02-12 23:55:00",
     "late_policies": {
         "00 00:00:00": 100,
         "00 02:00:00": 95,
