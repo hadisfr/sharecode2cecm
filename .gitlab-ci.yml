@@ -1,0 +1,22 @@
+image: python:latest
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+
+cache:
+  paths:
+    - .cache/pip
+    - .env/
+
+before_script:
+  - python -V               # Print out python version for debugging
+  - pip install virtualenv
+  - python -m venv .env
+  - source .env/bin/activate
+  - pip install -r requirements.txt
+
+test:
+  stage: test
+  script:
+    - pip install flake8
+    - flake8 --ignore=E501 --exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,.env
