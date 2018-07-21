@@ -72,8 +72,8 @@ def get_submissions_raw_date(authentication_data):
     for (question, submissions) in raw_db.items():
         for submission in submissions:
             if (
-                    not config.is_uid_case_sensitive
-                    and isinstance(submission[config.report_json_keys.uid], str)):
+                    not config.is_uid_case_sensitive and
+                    isinstance(submission[config.report_json_keys.uid], str)):
                 submission[config.report_json_keys.uid] = (submission[config.report_json_keys.uid]).lower()
             submission[config.report_json_keys.datetime] = datetime.strptime(
                 submission[config.report_json_keys.datetime],
@@ -93,10 +93,10 @@ def extract_acceptable_submissions(raw_db):
             score = calculate_score(submission)
             if score and submission[config.report_json_keys.uid] not in db[question].keys():
                 with open(
-                        codes_folder_addr
-                        + submission[config.report_json_keys.uid]
-                        + "."
-                        + config.file_extension.dictionary[submission[config.report_json_keys.lang]],
+                        codes_folder_addr +
+                        submission[config.report_json_keys.uid] +
+                        "." +
+                        config.file_extension.dictionary[submission[config.report_json_keys.lang]],
                         "w") as f:
                     print(submission[config.report_json_keys.code], file=f)
                 db[question][submission[config.report_json_keys.uid]] = score
